@@ -10,7 +10,29 @@ const Account = ({ session }: { session: any }) => {
   const [allProfiles, setAllProfiles] = useState([])
 
   useEffect(() => {
-    getProfiles()
+    getProfiles();
+
+// Setup
+
+const channel = supabase
+  .channel('db-changes')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'profiles' }, // , filter: 'id=eq.23' },
+    (data: any) => {
+      console.log('Change received!', data)
+      setUsername(data.filter((p: { id: any; }) => p.id === user.id)[0].username)
+      setEmojId(data.filter((p: { id: any; }) => p.id === user.id)[0].emoji)
+      setAllProfiles(data as [])
+    }
+  )
+  .on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'users' },
+    (payload: any) => console.log(payload)
+  )
+  .subscribe()
+
   }, [session])
   const { user } = session;
 

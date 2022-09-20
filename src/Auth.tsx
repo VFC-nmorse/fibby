@@ -5,7 +5,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault()
 
     try {
@@ -14,7 +14,10 @@ export default function Auth() {
       if (error) throw error
       alert('Check your email for the login link!')
     } catch (error) {
-      alert(error.error_description || error.message)
+      if (error) {
+      const e = error as {message:string, error_description:string};
+        alert(e?.error_description ?? e?.message ?? "error with no messsage")
+      }
     } finally {
       setLoading(false)
     }

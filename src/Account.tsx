@@ -31,10 +31,13 @@ const Account = ({ session }: { session: any }) => {
       if (data) {
         setUsername(data.filter((p: { id: any; }) => p.id === user.id)[0].username)
         setEmojId(data.filter((p: { id: any; }) => p.id === user.id)[0].emoji)
-        setAllProfiles(data)
+        setAllProfiles(data as [])
       }
     } catch (error) {
-      alert(error.message)
+      if (error) {
+        const e = error as { message: string }
+        alert(e.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -60,7 +63,10 @@ const Account = ({ session }: { session: any }) => {
         throw error
       }
     } catch (error) {
-      alert(error.message)
+      if (error) {
+        const e = error as { message: string };
+        alert(e.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -95,7 +101,7 @@ const Account = ({ session }: { session: any }) => {
                       </select>
                       <button className="button primary block" disabled={loading}>
                         Send My Bid
-                    </button>
+                      </button>
                     </form>
 
                 }
@@ -109,33 +115,33 @@ const Account = ({ session }: { session: any }) => {
       <div> {loading ? (
         'Saving ...'
       ) : (
-          <form onSubmit={updateProfile} className="form-widget">
-            <div>Email: {session.user.email}</div>
-            <div>
-              <label htmlFor="username">Name</label>
-              <input
-                id="username"
-                type="text"
-                value={username || ''}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="emoji">My emoji</label>
-              <input
-                id="emoji"
-                type="text"
-                value={emoji || ''}
-                onChange={(e) => setEmojId(e.target.value)}
-              />
-            </div>
-            <div>
-              <button className="button primary block" disabled={loading}>
-                Update profile
+        <form onSubmit={updateProfile} className="form-widget">
+          <div>Email: {session.user.email}</div>
+          <div>
+            <label htmlFor="username">Name</label>
+            <input
+              id="username"
+              type="text"
+              value={username || ''}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="emoji">My emoji</label>
+            <input
+              id="emoji"
+              type="text"
+              value={emoji || ''}
+              onChange={(e) => setEmojId(e.target.value)}
+            />
+          </div>
+          <div>
+            <button className="button primary block" disabled={loading}>
+              Update profile
             </button>
-            </div>
-          </form>
-        )}
+          </div>
+        </form>
+      )}
       </div>
 
 

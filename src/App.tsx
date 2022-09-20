@@ -10,7 +10,7 @@ import { supabase } from './supabaseClient'
 
 function App() {
   //const [count, setCount] = useState(0)
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState(null as null | {user:{id:string}})
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

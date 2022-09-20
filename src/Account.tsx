@@ -18,7 +18,7 @@ const channel = supabase
   .channel('db-changes')
   .on(
     'postgres_changes',
-    { event: '*', schema: 'public', table: 'profiles' }, // , filter: 'id=eq.23' },
+    { event: '*', schema: 'public', table: 'profiles', filter: '' },
     (data: any) => {
       console.log('Change received!', data)
       setUsername(data.filter((p: { id: any; }) => p.id === user.id)[0].username)

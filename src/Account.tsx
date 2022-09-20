@@ -48,12 +48,38 @@ const Account = ({ session }: { session: any }) => {
 
     try {
       setLoading(true)
-      const { user } = session
 
       const updates = {
         id: user.id,
         username,
         emoji,
+        updated_at: new Date(),
+      }
+
+      let { error } = await supabase.from('profiles').upsert(updates)
+
+      if (error) {
+        throw error
+      }
+    } catch (error) {
+      if (error) {
+        const e = error as { message: string };
+        alert(e.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateBid = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault()
+
+    try {
+      setLoading(true)
+
+      const updates = {
+        id: user.id,
+        bid,
         updated_at: new Date(),
       }
 
@@ -79,16 +105,14 @@ const Account = ({ session }: { session: any }) => {
         <ul className="list-group">
           {
             allProfiles.map((p: { id: string, username: string, bid: number }) => (
-              <li key={p.id}>{p.username} <span className="badge">{p.bid ? p.bid : "?"}</span>
+              <li key={p.id}>{p.username}
                 {
-                  p.id === user.id ?
-                    null
-
-                    :
+                  p.id === user.id ? (
                     <form
                       // onSubmit={updateBid} 
                       className="form-widget">
-                      <select defaultValue={p.bid}
+                      <span className="badge">{p.bid ? p.bid : "?"}</span>
+                      <select defaultValue={p.bid || 0}
                       // onChange={(e) => setBid(e.target.value)}
                       >
                         <option value={0} key="0" >?</option>
@@ -102,8 +126,7 @@ const Account = ({ session }: { session: any }) => {
                       <button className="button primary block" disabled={loading}>
                         Send My Bid
                       </button>
-                    </form>
-
+                    </form>) : <span className="badge">{p.bid ? p.bid : "?"}</span>
                 }
               </li>
             ))}

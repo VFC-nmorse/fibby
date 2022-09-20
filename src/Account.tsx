@@ -6,6 +6,7 @@ const Account = ({ session }: { session: any }) => {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState(null as string | null)
   const [emoji, setEmojId] = useState("")
+  const [bid, setBid] = useState(0)
   const [allProfiles, setAllProfiles] = useState([])
 
   useEffect(() => {
@@ -109,11 +110,11 @@ const Account = ({ session }: { session: any }) => {
                 {
                   p.id === user.id ? (
                     <form
-                      // onSubmit={updateBid} 
+                      onSubmit={updateBid} 
                       className="form-widget">
                       <span className="badge">{p.bid ? p.bid : "?"}</span>
                       <select defaultValue={p.bid || 0}
-                      // onChange={(e) => setBid(e.target.value)}
+                      onChange={(e) => setBid(parseInt(e.target.value, 10) ?? 0)}
                       >
                         <option value={0} key="0" >?</option>
                         <option value={1} key="1" >1</option>
